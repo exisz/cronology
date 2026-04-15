@@ -12,6 +12,7 @@ services:
       - PORT=18790
       - CRONOLOGY_DATA_DIR=/app/data
       - OPENCLAW_HOOK_URL=http://host.docker.internal:18789/hooks/wake
+      - OPENCLAW_HOOK_TOKEN=3ba2a7d1f2b52a3a789d3aa128b2f1fa
 
 volumes:
   cronology-data:

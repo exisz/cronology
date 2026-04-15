@@ -144,17 +144,37 @@ async function fireCallback(
 ): Promise<void> {
   if (!watcher.callback_url) return;
 
-  const body = {
-    event: "watcher.completed",
-    watcher: watcher.name,
-    template: watcher.template,
-    status,
-    result,
-    pollCount: watcher.poll_count,
-    createdAt: watcher.created_at,
-    completedAt: new Date().toISOString(),
-    durationMs: Date.now() - new Date(watcher.created_at).getTime(),
-  };
+  // Format result summary for the callback text
+  const template = getTemplate(watcher.template);
+  const resultSummary = template && result
+    ? template.format(JSON.parse(watcher.payload), result)
+    : JSON.stringify(result);
+  const durationMs = Date.now() - new Date(watcher.created_at).getTime();
+  const durationStr = durationMs < 60000
+    ? `${Math.round(durationMs / 1000)}s`
+    : `${Math.round(durationMs / 60000)}m`;
+
+  const statusEmoji = status === "done" ? "✅" : "⏰";
+  const text = `${statusEmoji} Cronology watcher **${watcher.name}** (${watcher.template}) ${status === "done" ? "completed" : "timed out"} after ${durationStr} (${watcher.poll_count} polls). ${resultSummary}`;
+
+  // OpenClaw /hooks/wake expects {text, mode}
+  // Generic webhooks get the full event payload
+  const isOpenClawHook = watcher.callback_url.includes("/hooks/wake") || watcher.callback_url.includes("/hooks/agent");
+
+  const body = isOpenClawHook
+    ? { text, mode: "now" }
+    : {
+        event: "watcher.completed",
+        watcher: watcher.name,
+        template: watcher.template,
+        status,
+        result,
+        text,
+        pollCount: watcher.poll_count,
+        createdAt: watcher.created_at,
+        completedAt: new Date().toISOString(),
+        durationMs,
+      };
 
   try {
     const headers: Record<string, string> = {

@@ -117,14 +117,18 @@ export function addWatcher(opts: AddWatcherOptions): WatcherRow {
     throw new Error(`Watcher already exists: ${opts.name}`);
   }
 
+  // Fall back to env defaults for callback
+  const callbackUrl = opts.callbackUrl || process.env.OPENCLAW_HOOK_URL;
+  const callbackToken = opts.callbackToken || process.env.OPENCLAW_HOOK_TOKEN;
+
   const watcher = insertWatcher({
     name: opts.name,
     template: opts.template,
     payload: opts.payload || {},
     intervalMs: opts.intervalMs || template.defaults.intervalMs,
     timeoutMs: opts.timeoutMs || template.defaults.timeoutMs,
-    callbackUrl: opts.callbackUrl,
-    callbackToken: opts.callbackToken,
+    callbackUrl,
+    callbackToken,
   });
 
   // Start polling immediately
