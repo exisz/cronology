@@ -1,0 +1,14 @@
+services:
+  cronology:
+    build: .
+    container_name: cronology
+    restart: unless-stopped
+    ports:
+      - "18790:18790"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - NODE_ENV=production
+      - PORT=18790
+      - CRONOLOGY_DATA_DIR=/app/data
+      - OPENCLAW_HOOK_URL=http://host.docker.internal:18789/hooks/wake

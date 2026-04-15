@@ -1,0 +1,72 @@
+{
+  "name": "cronology",
+  "version": "0.1.0",
+  "description": "Ephemeral task watcher service — zero-cost polling daemon with webhook callbacks",
+  "type": "module",
+  "bin": {
+    "cronology": "dist/cli/index.js"
+  },
+  "scripts": {
+    "dev": "tsx watch src/server/index.ts",
+    "build": "pnpm build:server && pnpm build:web",
+    "build:server": "tsup src/server/index.ts src/cli/index.ts --format esm --out-dir dist --splitting --external express --external compression --external commander --external better-sqlite3 --external croner",
+    "build:web": "vite build",
+    "start": "node dist/server/index.js",
+    "preview": "pnpm build && pnpm start",
+    "cli": "node --experimental-strip-types src/cli/index.ts"
+  },
+  "keywords": [
+    "watcher",
+    "polling",
+    "webhook",
+    "cron",
+    "ephemeral",
+    "task",
+    "monitoring",
+    "selfhosted"
+  ],
+  "author": "exisz",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/exisz/cronology.git"
+  },
+  "homepage": "https://github.com/exisz/cronology#readme",
+  "bugs": {
+    "url": "https://github.com/exisz/cronology/issues"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "commander": "^13.1.0",
+    "compression": "^1.8.0",
+    "croner": "^9.0.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/compression": "^1.7.5",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^4.5.0",
+    "autoprefixer": "^10.4.21",
+    "clsx": "^2.1.1",
+    "postcss": "^8.5.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.0",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^3.4.17",
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0",
+    "vite": "^6.3.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "better-sqlite3"
+    ]
+  }
+}
