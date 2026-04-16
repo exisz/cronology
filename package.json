@@ -1,7 +1,7 @@
 {
   "name": "cronology",
   "version": "0.1.0",
-  "description": "Ephemeral task watcher service — zero-cost polling daemon with webhook callbacks",
+  "description": "Ephemeral task watcher service \u2014 zero-cost polling daemon with webhook callbacks",
   "type": "module",
   "bin": {
     "cronology": "dist/cli/index.js"
@@ -68,5 +68,10 @@
       "esbuild",
       "better-sqlite3"
     ]
-  }
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ]
 }
