@@ -158,23 +158,39 @@ async function fireCallback(
   const text = `${statusEmoji} Cronology watcher **${watcher.name}** (${watcher.template}) ${status === "done" ? "completed" : "timed out"} after ${durationStr} (${watcher.poll_count} polls). ${resultSummary}`;
 
   // OpenClaw /hooks/wake expects {text, mode}
+  // OpenClaw /hooks/agent expects {message, deliver, channel, to}
   // Generic webhooks get the full event payload
-  const isOpenClawHook = watcher.callback_url.includes("/hooks/wake") || watcher.callback_url.includes("/hooks/agent");
+  const isOpenClawAgent = watcher.callback_url.includes("/hooks/agent");
+  const isOpenClawWake = watcher.callback_url.includes("/hooks/wake");
 
-  const body = isOpenClawHook
-    ? { text, mode: "now" }
-    : {
-        event: "watcher.completed",
-        watcher: watcher.name,
-        template: watcher.template,
-        status,
-        result,
-        text,
-        pollCount: watcher.poll_count,
-        createdAt: watcher.created_at,
-        completedAt: new Date().toISOString(),
-        durationMs,
-      };
+  let body: Record<string, unknown>;
+  if (isOpenClawAgent) {
+    body = {
+      message: text,
+      name: `cronology:${watcher.name}`,
+      deliver: "announce",
+    };
+    // Add channel/to from env if available
+    const channel = process.env.OPENCLAW_HOOK_CHANNEL;
+    const to = process.env.OPENCLAW_HOOK_TO;
+    if (channel) body.channel = channel;
+    if (to) body.to = to;
+  } else if (isOpenClawWake) {
+    body = { text, mode: "now" };
+  } else {
+    body = {
+      event: "watcher.completed",
+      watcher: watcher.name,
+      template: watcher.template,
+      status,
+      result,
+      text,
+      pollCount: watcher.poll_count,
+      createdAt: watcher.created_at,
+      completedAt: new Date().toISOString(),
+      durationMs,
+    };
+  }
 
   try {
     const headers: Record<string, string> = {

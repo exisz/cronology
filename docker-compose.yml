@@ -11,8 +11,11 @@ services:
       - NODE_ENV=production
       - PORT=18790
       - CRONOLOGY_DATA_DIR=/app/data
-      - OPENCLAW_HOOK_URL=http://host.docker.internal:18789/hooks/wake
-      - OPENCLAW_HOOK_TOKEN=3ba2a7d1f2b52a3a789d3aa128b2f1fa
+      # Optional: webhook callback defaults
+      # - OPENCLAW_HOOK_URL=http://localhost:18789/hooks/agent
+      # - OPENCLAW_HOOK_TOKEN=your-token-here
+      # - OPENCLAW_HOOK_CHANNEL=discord
+      # - OPENCLAW_HOOK_TO=channel:your-channel-id
 
 volumes:
   cronology-data:

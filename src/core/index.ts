@@ -104,6 +104,8 @@ export interface AddWatcherOptions {
   timeoutMs?: number;
   callbackUrl?: string;
   callbackToken?: string;
+  callbackChannel?: string;
+  callbackTo?: string;
 }
 
 export function addWatcher(opts: AddWatcherOptions): WatcherRow {
