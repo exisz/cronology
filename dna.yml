@@ -1,0 +1,9 @@
+id: dna://tool/cronology
+type: tool
+title: cronology — Cron scheduling CLI
+description: Cron frequency management and scheduling CLI tool.
+command: cronology
+package_name: cronology
+homepage: https://github.com/exisz/cronology
+status: active
+managed_by: dna://agent/nebula
